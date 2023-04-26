@@ -287,6 +287,10 @@ source s_{{ port_id }} {
             set($FACILITY, value("fields.sc4s_syslog_facility") condition(match('facility' template('`SC4S_DEST_SPLUNK_INDEXED_FIELDS`') type(string) flags(substring))));
             set($LEVEL, value("fields.sc4s_syslog_severity") condition(match('severity' template('`SC4S_DEST_SPLUNK_INDEXED_FIELDS`') type(string) flags(substring)) ));
         };
+
+        parser {
+            classified-events();
+        };
     };
     {%- endif %}
 
@@ -468,6 +472,10 @@ source s_{{ port_id }} {
         rewrite {
             set($FACILITY, value("fields.sc4s_syslog_facility") condition(match('facility' template('`SC4S_DEST_SPLUNK_INDEXED_FIELDS`') type(string) flags(substring))));
             set($LEVEL, value("fields.sc4s_syslog_severity") condition(match('severity' template('`SC4S_DEST_SPLUNK_INDEXED_FIELDS`') type(string) flags(substring)) ));
+        };
+
+        parser {
+            classified-events();
         };
     };
     {%- endif %}
