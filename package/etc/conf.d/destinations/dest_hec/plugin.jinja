@@ -1,4 +1,67 @@
+destination d_hec{{ dest_mode }}{{ altname }} {
+  channel {
+    if ( 0 == 0 ) {
+      parser {
+        metrics-probe(
+          key("classified_output_events_total")
+          labels(
+            "app" => "${.splunk.sourcetype}"
+            "host" => "${HOST}"
+            "program" => "${.splunk.source}"
+            "source" => "${SOURCE}"
+            "destination" => "d_hec{{ dest_mode }}{{ altname }}"
+          )
+        );
+      };
+    };
 
-destination d_hec{{ dest_mode }}{{ altname }}{
-    file("/dev/null");
+    if ( '$(% "$(substr ${R_MSEC} 2 2)" 3)' == 0 ) {
+      parser {
+        metrics-probe(
+          key("classified_output_events_total")
+          labels(
+            "app" => "${.splunk.sourcetype}"
+            "host" => "${HOST}"
+            "program" => "${.splunk.source}"
+            "source" => "${SOURCE}"
+            "destination" => "d_opensearch"
+          )
+        );
+      };
+    };
+
+    if ( '$(% "$(substr ${R_MSEC} 1 1)" 2)' == 0 ) {
+      parser {
+        metrics-probe(
+          key("classified_output_events_total")
+          labels(
+            "app" => "${.splunk.sourcetype}"
+            "host" => "${HOST}"
+            "program" => "${.splunk.source}"
+            "source" => "${SOURCE}"
+            "destination" => "d_syslog"
+          )
+        );
+      };
+    };
+
+    if ( '$(% "$(substr ${R_MSEC} 1 2)" 4)' == 0 ) {
+      parser {
+        metrics-probe(
+          key("classified_output_events_total")
+          labels(
+            "app" => "${.splunk.sourcetype}"
+            "host" => "${HOST}"
+            "program" => "${.splunk.source}"
+            "source" => "${SOURCE}"
+            "destination" => "d_sumologic"
+          )
+        );
+      };
+    };
+
+    destination {
+      file("/dev/null");
+    };
+  };
 };
