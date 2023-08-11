@@ -1,0 +1,9 @@
+
+# This supports any valid syslog-ng destination (which can be supplied in the local mount).  Supersedes all other destination declarations.
+
+log{
+    {%- for i in destination %}
+    destination({{ i }});
+    {%- endfor %}
+    flags(catchall,flow-control, final);
+};
